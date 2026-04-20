@@ -19,6 +19,11 @@ namespace lsfUtils
             public static Color PoisonColor = new(0.31f, 0.46f, 0.10f);
         }
 
+        public class EffectTypes
+        {
+            public static RoomSettings.RoomEffect.Type EvilWater = new(nameof(EvilWater), true);
+        }
+
         public class CreatureTemplateType
         {
             public static CreatureTemplate.Type WeaverLizard = new(nameof(WeaverLizard), true);

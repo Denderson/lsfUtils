@@ -40,6 +40,7 @@ using static Pom.Pom;
 using static SlugBase.Features.FeatureTypes;
 using static lsfUtils.Ripplespace.RippleHybridHooks;
 using lsfUtils.Ripplespace;
+using lsfUtils.Effects.EvilWater;
 
 #pragma warning disable CS0618
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -61,6 +62,10 @@ namespace lsfUtils
         public bool isInit;
 
         public static readonly EntityID SpecialId = new(1, -20);
+        public static readonly float secondsUntilFullPoisonFromEvilWater = 5;
+
+        public static readonly float secondsUntilPoisonStartsFallingOffAfterExitingPoisonWater = 3;
+        public static readonly float secondsUntilPoisonBuildupAfterEnteringPoisonWater = 1.5f;
 
         private void LoadResources(RainWorld rainWorld)
         {
@@ -74,6 +79,8 @@ namespace lsfUtils
             try
             {
                 Log = Logger;
+
+                On.RainWorld.OnModsInit += RainWorld_OnModsInit;
 
                 // fisobs
                 {
@@ -236,7 +243,13 @@ namespace lsfUtils
                     On.PhysicalObject.InitiateGraphicsModule += PhysicalObject_InitiateGraphicsModule;
                     On.RoomCamera.SpriteLeaser.ctor += SpriteLeaser_ctor;
                     On.AbstractCreature.setCustomFlags += AbstractCreature_setCustomFlags;
+
+                    On.Water.ctor += EvilWater.InitialiseEvilWater;
+                    On.Creature.Update += EvilWater.EvilWaterLogic;
+
+                    new Hook(typeof(Creature).GetProperty(nameof(Creature.injectedPoison)).GetGetMethod(), typeof(EvilWater).GetMethod(nameof(EvilWater.OverridePoison)));
                 }
+
 
                 if (isInit) return;
                 isInit = true;
@@ -262,7 +275,28 @@ namespace lsfUtils
             }
         }
 
-        
+        private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
+        {
+            orig(self);
+            if (initialized)
+            {
+                return;
+            }
+            initialized = true;
+            //Futile.atlasManager.LoadImage("atlases/StarNosedLizardHeadSprites/LizardHead0.2134689");
+            //Futile.atlasManager.LoadImage("atlases/StarNosedLizardHeadSprites/LizardHead1.2134689");
+            //Futile.atlasManager.LoadImage("atlases/StarNosedLizardHeadSprites/LizardHead2.2134689");
+            //Futile.atlasManager.LoadImage("atlases/StarNosedLizardHeadSprites/LizardHead3.2134689");
+            Futile.atlasManager.LoadImage("LizardHead0.2134689");
+            Futile.atlasManager.LoadImage("LizardHead1.2134689");
+            Futile.atlasManager.LoadImage("LizardHead2.2134689");
+            Futile.atlasManager.LoadImage("LizardHead3.2134689");
+
+            Futile.atlasManager.LoadImage("LizardHead0.2134688");
+            Futile.atlasManager.LoadImage("LizardHead1.2134688");
+            Futile.atlasManager.LoadImage("LizardHead2.2134688");
+            Futile.atlasManager.LoadImage("LizardHead3.2134688");
+        }
 
         private float PhysicalObject_GetLocalGravity(On.PhysicalObject.orig_GetLocalGravity orig, PhysicalObject self)
         {
