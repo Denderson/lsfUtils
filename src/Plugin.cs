@@ -227,7 +227,6 @@ namespace lsfUtils
 
                 // spiders
                 {
-
                     On.DartMaggot.ChangeMode += SpiderCode.DartMaggot_ChangeMode;
                     On.BigSpiderAI.SpiderSpitModule.CanSpit += SpiderCode.SpiderSpitModule_CanSpit;
                     On.DartMaggot.Shoot += SpiderCode.DartMaggot_Shoot;
