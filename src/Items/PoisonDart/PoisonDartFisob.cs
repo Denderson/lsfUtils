@@ -7,18 +7,18 @@ using Fisobs.Core;
 using Fisobs.Items;
 using Fisobs.Properties;
 using Fisobs.Sandbox;
+using static lsfUtils.Plugin;
 
 namespace lsfUtils.Items.PoisonDart
 {
-
     public class PoisonDartFisob : Fisob
     {
-
         public PoisonDartFisob() : base(Enums.AbstractPhysicalObjectType.PoisonDart)
         {
-            Icon = new SimpleIcon("Kill_Scavenger", RainWorld.RippleGold);
+            Icon = new SimpleIcon("Symbol_PoisonDart", Enums.Colors.PoisonColor);
             SandboxPerformanceCost = new SandboxPerformanceCost(0.35f, 0f);
             RegisterUnlock(Enums.SandboxUnlockID.PoisonDart, MultiplayerUnlocks.SandboxUnlockID.Slugcat, 15);
+            Log.LogMessage("Made poison dart!");
         }
 
         public override AbstractPhysicalObject Parse(World world, EntitySaveData saveData, SandboxUnlock unlock)

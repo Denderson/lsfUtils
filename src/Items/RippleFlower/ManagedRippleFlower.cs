@@ -34,7 +34,6 @@ public class ManagedRippleFlower : Pom.Pom.ManagedObjectType
             Log.LogMessage("Making ripple flower!");
             return null;
         }
-        Log.LogMessage("Not making ripple flower!");
         return null;
     }
 }

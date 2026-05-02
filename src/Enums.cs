@@ -14,6 +14,8 @@ namespace lsfUtils
             extEnum?.Unregister();
         }
 
+        public enum DartType {Default, Poison, Quill, Sharpnel}
+
         public class Colors
         {
             public static Color PoisonColor = new(0.31f, 0.46f, 0.10f);
@@ -151,6 +153,7 @@ namespace lsfUtils
         public class AbstractPhysicalObjectType
         {
             public static AbstractPhysicalObject.AbstractObjectType RippleFlower = new(nameof(RippleFlower), true);
+            public static AbstractPhysicalObject.AbstractObjectType Dart = new(nameof(Dart), true);
             public static AbstractPhysicalObject.AbstractObjectType PoisonDart = new(nameof(PoisonDart), true);
 
             public void UnregisterValues()

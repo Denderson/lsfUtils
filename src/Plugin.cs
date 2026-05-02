@@ -101,6 +101,8 @@ namespace lsfUtils
 
                     Content.Register(new RippleFlowerFisob());
                     Content.Register(new PoisonDartFisob());
+
+                    Log.LogMessage("Done with fisobs!!");
                 }
 
                 // lizards
@@ -320,9 +322,12 @@ namespace lsfUtils
             Futile.atlasManager.LoadImage("LizardHead1.2134689");
             Futile.atlasManager.LoadImage("LizardHead2.2134689");
             Futile.atlasManager.LoadImage("LizardHead3.2134689");
+
+            Futile.atlasManager.LoadImage("atlases/PoisonDart");
+            Futile.atlasManager.LoadImage("atlases/Symbol_PoisonDart");
         }
 
-        private float PhysicalObject_GetLocalGravity(On.PhysicalObject.orig_GetLocalGravity orig, PhysicalObject self)
+        public float PhysicalObject_GetLocalGravity(On.PhysicalObject.orig_GetLocalGravity orig, PhysicalObject self)
         {
             if (self != null && PhysicalObjectCWT.TryGetData(self, out var data) && data.shouldOverrideGravity)
             {
@@ -331,7 +336,7 @@ namespace lsfUtils
             return orig(self);
         }
 
-        private void LizardAI_ctor(On.LizardAI.orig_ctor orig, LizardAI self, AbstractCreature creature, World world)
+        public void LizardAI_ctor(On.LizardAI.orig_ctor orig, LizardAI self, AbstractCreature creature, World world)
         {
             orig(self, creature, world);
             CreatureTemplate.Type type = creature?.creatureTemplate?.type;

@@ -21,7 +21,7 @@ public class StarSpawnAI : ArtificialIntelligence, IUseARelationshipTracker
 
     public class StardustSpawnTrackedState : RelationshipTracker.TrackedCreatureState
     {
-        bool holdingFlower;
+        //bool holdingFlower;
     }
 
     public StarSpawn spawn;

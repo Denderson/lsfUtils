@@ -4,6 +4,9 @@
         <TargetFramework>net48</TargetFramework>
         <LangVersion>12</LangVersion>
         <DebugType>portable</DebugType>
+        <BaseOutputPath></BaseOutputPath>
+        <GenerateDocumentationFile>False</GenerateDocumentationFile>
+        <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     </PropertyGroup>
     
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -16,14 +19,14 @@
     
     <Target Name="GenerateMod" AfterTargets="PostBuildEvent">
 		<ItemGroup>
-			<RemovePlugins Include="../mod/plugins/*.dll" />
+			<RemovePlugins Include="../lsfUtils/plugins/*.dll" />
 		</ItemGroup>
 		<ItemGroup>
 			<CopyPlugins Include="$(TargetPath)" />
 		</ItemGroup>
 		
         <Delete Files="@(RemovePlugins)" />
-        <Copy SourceFiles="@(CopyPlugins)" DestinationFolder="../mod/newest/plugins/" />
+        <Copy SourceFiles="@(CopyPlugins)" DestinationFolder="../lsfUtils/plugins/" />
     </Target>
     
     <ItemGroup>
