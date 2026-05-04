@@ -27,7 +27,7 @@ namespace lsfUtils.Items.PoisonDart
             {
                 if (PoisonDart.pullOutTimer > 0)
                 {
-                    grabability = Player.ObjectGrabability.CantGrab;
+                    grabability = Player.ObjectGrabability.Drag;
                     return;
                 }
             }

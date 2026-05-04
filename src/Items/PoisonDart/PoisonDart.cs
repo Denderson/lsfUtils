@@ -25,7 +25,7 @@ namespace lsfUtils.Items.PoisonDart
 
         public override void Update(bool eu)
         {
-            Update(eu);
+            base.Update(eu);
             if (poison > 0f)
             {
                 if (mode == Mode.StuckInCreature && stuckInObject != null)
@@ -41,8 +41,8 @@ namespace lsfUtils.Items.PoisonDart
 
         public override void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
-            DrawSprites(sLeaser, rCam, timeStacker, camPos);
-            sLeaser.sprites[0].color = Color.red;
+            base.DrawSprites(sLeaser, rCam, timeStacker, camPos);
+            //sLeaser.sprites[0].color = Color.red;
         }
 
         public override void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
@@ -50,7 +50,6 @@ namespace lsfUtils.Items.PoisonDart
             Color waterShineColor = palette.waterShineColor;
             Color blackColor = palette.blackColor;
             color = Color.Lerp(waterShineColor, blackColor, 0.6f);
-            sLeaser.sprites[0].color = Color.green;
         }
     }
 }

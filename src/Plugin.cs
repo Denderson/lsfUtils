@@ -301,57 +301,7 @@ namespace lsfUtils
             Futile.atlasManager.LoadImage("atlases/Dart");
             Futile.atlasManager.LoadImage("atlases/PoisonDart");
 
-            Futile.atlasManager.LoadImage("LizardJaw0.2134688");
-            Futile.atlasManager.LoadImage("LizardJaw1.2134688");
-            Futile.atlasManager.LoadImage("LizardJaw2.2134688");
-            Futile.atlasManager.LoadImage("LizardJaw3.2134688");
-            Futile.atlasManager.LoadImage("LizardJaw0.2134689");
-            Futile.atlasManager.LoadImage("LizardJaw1.2134689");
-            Futile.atlasManager.LoadImage("LizardJaw2.2134689");
-            Futile.atlasManager.LoadImage("LizardJaw3.2134689");
-
-            Futile.atlasManager.LoadImage("LizardLowerTeeth0.2134688");
-            Futile.atlasManager.LoadImage("LizardLowerTeeth1.2134688");
-            Futile.atlasManager.LoadImage("LizardLowerTeeth2.2134688");
-            Futile.atlasManager.LoadImage("LizardLowerTeeth3.2134688");
-            Futile.atlasManager.LoadImage("LizardLowerTeeth0.2134689");
-            Futile.atlasManager.LoadImage("LizardLowerTeeth1.2134689");
-            Futile.atlasManager.LoadImage("LizardLowerTeeth2.2134689");
-            Futile.atlasManager.LoadImage("LizardLowerTeeth3.2134689");
-
-            Futile.atlasManager.LoadImage("LizardUpperTeeth0.2134689");
-            Futile.atlasManager.LoadImage("LizardUpperTeeth1.2134689");
-            Futile.atlasManager.LoadImage("LizardUpperTeeth2.2134689");
-            Futile.atlasManager.LoadImage("LizardUpperTeeth3.2134689");
-
-            Futile.atlasManager.LoadImage("LizardHead0.2134688");
-            Futile.atlasManager.LoadImage("LizardHead1.2134688");
-            Futile.atlasManager.LoadImage("LizardHead2.2134688");
-            Futile.atlasManager.LoadImage("LizardHead3.2134688");
-            Futile.atlasManager.LoadImage("LizardHead0.2134689");
-            Futile.atlasManager.LoadImage("LizardHead1.2134689");
-            Futile.atlasManager.LoadImage("LizardHead2.2134689");
-            Futile.atlasManager.LoadImage("LizardHead3.2134689");
-            Futile.atlasManager.LoadImage("LizardHead0.2134690");
-            Futile.atlasManager.LoadImage("LizardHead1.2134690");
-            Futile.atlasManager.LoadImage("LizardHead2.2134690");
-            Futile.atlasManager.LoadImage("LizardHead3.2134690");
-            Futile.atlasManager.LoadImage("LizardHead0.2134691");
-            Futile.atlasManager.LoadImage("LizardHead1.2134691");
-            Futile.atlasManager.LoadImage("LizardHead2.2134691");
-            Futile.atlasManager.LoadImage("LizardHead3.2134691");
-            Futile.atlasManager.LoadImage("LizardHead0.2134692");
-            Futile.atlasManager.LoadImage("LizardHead1.2134692");
-            Futile.atlasManager.LoadImage("LizardHead2.2134692");
-            Futile.atlasManager.LoadImage("LizardHead3.2134692");
-            Futile.atlasManager.LoadImage("LizardHead0.2134693");
-            Futile.atlasManager.LoadImage("LizardHead1.2134693");
-            Futile.atlasManager.LoadImage("LizardHead2.2134693");
-            Futile.atlasManager.LoadImage("LizardHead3.2134693");
-            Futile.atlasManager.LoadImage("LizardHead0.2134694");
-            Futile.atlasManager.LoadImage("LizardHead1.2134694");
-            Futile.atlasManager.LoadImage("LizardHead2.2134694");
-            Futile.atlasManager.LoadImage("LizardHead3.2134694");
+            Futile.atlasManager.LoadAtlas("atlases/lsfLizardStuff");
         }
 
         private float PhysicalObject_GetLocalGravity(On.PhysicalObject.orig_GetLocalGravity orig, PhysicalObject self)

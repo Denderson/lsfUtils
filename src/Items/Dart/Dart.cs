@@ -74,11 +74,6 @@ namespace lsfUtils.Items.Dart
             hasPoisonGraphicsActive = poison > 0f;
         }
 
-        public override void PlaceInRoom(Room placeRoom)
-        {
-            PlaceInRoom(placeRoom);
-        }
-
         public override void ChangeMode(Mode newMode)
         {
             if (mode == Mode.StuckInCreature)
@@ -97,12 +92,12 @@ namespace lsfUtils.Items.Dart
             {
                 spinning = false;
             }
-            ChangeMode(newMode);
+            base.ChangeMode(newMode);
         }
 
         public override void Update(bool eu)
         {
-            Update(eu);
+            base.Update(eu);
             soundLoop.sound = SoundID.None;
             if (firstChunk.vel.magnitude > 5f)
             {
@@ -206,7 +201,7 @@ namespace lsfUtils.Items.Dart
 
         public override void Thrown(Creature thrownBy, Vector2 thrownPos, Vector2? firstFrameTraceFromPos, IntVector2 throwDir, float frc, bool eu)
         {
-            Thrown(thrownBy, thrownPos, firstFrameTraceFromPos, throwDir, frc, eu);
+            base.Thrown(thrownBy, thrownPos, firstFrameTraceFromPos, throwDir, frc, eu);
             room?.PlaySound(SoundID.Slugcat_Throw_Spear, firstChunk);
         }
 
@@ -299,7 +294,7 @@ namespace lsfUtils.Items.Dart
             {
                 return;
             }
-            HitSomethingWithoutStopping(obj, chunk, appendage);
+            base.HitSomethingWithoutStopping(obj, chunk, appendage);
         }
 
         public void ProvideRotationBodyPart(BodyChunk chunk, BodyPart bodyPart)
@@ -320,18 +315,6 @@ namespace lsfUtils.Items.Dart
                 return false;
             }
             bool flag2 = false;
-            if (abstractPhysicalObject.world.game.IsArenaSession && abstractPhysicalObject.world.game.GetArenaGameSession.GameTypeSetup.spearHitScore != 0 && thrownBy != null && thrownBy is Player && result.obj is Creature)
-            {
-                flag2 = true;
-                if ((result.obj as Creature).State is HealthState && ((result.obj as Creature).State as HealthState).health <= 0f)
-                {
-                    flag2 = false;
-                }
-                else if (!((result.obj as Creature).State is HealthState) && (result.obj as Creature).State.dead)
-                {
-                    flag2 = false;
-                }
-            }
             if (result.obj is Creature)
             {
                 if (!(result.obj is Player) || (result.obj as Creature).SpearStick(this, Mathf.Lerp(0.55f, 0.62f, UnityEngine.Random.value), result.chunk, result.onAppendagePos, firstChunk.vel))
@@ -376,24 +359,31 @@ namespace lsfUtils.Items.Dart
         }
         public override void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
+            string dartSprite = null;
+            switch (abstractDart.dartType)
+            {
+                case Enums.DartType.Poison: dartSprite = "atlases/PoisonDart"; break;
+                default: dartSprite = "atlases/Dart"; break;
+            }
             if (abstractDart.poison > 0f)
             {
                 hasPoisonGraphicsActive = true;
                 sLeaser.sprites = new FSprite[2];
-                sLeaser.sprites[1] = new FSprite("atlases/PoisonDart");
+                sLeaser.sprites[1] = new FSprite(dartSprite);
+                float width = 4f;
+                float length = 11f;
                 sLeaser.sprites[0] = TriangleMesh.MakeLongMesh(1, pointyTip: false, customColor: true);
-                for (int i = 0; i < 2; i++)
-                {
-                    float num = Mathf.InverseLerp(0f, 1f, i);
-                    (sLeaser.sprites[0] as TriangleMesh).MoveVertice(i * 2, new Vector2(-4f, -15f * num));
-                    (sLeaser.sprites[0] as TriangleMesh).MoveVertice(i * 2 + 1, new Vector2(4f, -15f * num));
-                }
+                (sLeaser.sprites[0] as TriangleMesh).MoveVertice(0, new Vector2(-width, 0f));
+                (sLeaser.sprites[0] as TriangleMesh).MoveVertice(1, new Vector2(width, 0f));
+                (sLeaser.sprites[0] as TriangleMesh).MoveVertice(2, new Vector2(width / 1.25f, -length));
+                (sLeaser.sprites[0] as TriangleMesh).MoveVertice(3, new Vector2(-width / 1.25f, -length));
+
                 sLeaser.sprites[0].shader = rCam.room.game.rainWorld.Shaders["PoisonSpearTip"];
             }
             else
             {
                 sLeaser.sprites = new FSprite[1];
-                sLeaser.sprites[0] = new FSprite("atlases/Dart");
+                sLeaser.sprites[0] = new FSprite(dartSprite);
             }
             AddToContainer(sLeaser, rCam, null);
         }
@@ -428,12 +418,10 @@ namespace lsfUtils.Items.Dart
             if (hasPoisonGraphicsActive)
             {
                 Vector2 vector3 = Custom.DirVec(new Vector2(0f, 0f), vector2);
-                float num2 = Mathf.Lerp(lastPivotAtTip ? 7f : 26f, pivotAtTip ? 7f : 26f, timeStacker);
+                float num2 = Mathf.Lerp(lastPivotAtTip ? 6f : 21f, pivotAtTip ? 6f : 21f, timeStacker);
                 Vector2 vector4 = vector + vector3 * num2;
                 sLeaser.sprites[0].x = vector4.x - camPos.x;
                 sLeaser.sprites[0].y = vector4.y - camPos.y;
-                sLeaser.sprites[0].anchorY = 0f;
-                sLeaser.sprites[0].rotation = Custom.VecToDeg(vector3);
                 //Color rgb = new HSLColor(Enums.Colors.PoisonColor, 1f, 0.5f).rgb;
                 Color rgb = Enums.Colors.PoisonColor;
                 rgb = new Color(rgb.r, rgb.g, rgb.b, abstractDart.poison);
