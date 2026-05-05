@@ -557,10 +557,13 @@ namespace lsfUtils.Creatures.Lizards
                 breedParams.idleCounterSubtractWhenCloseToIdlePos = 100;
                 breedParams.danger = 0.3f;
                 breedParams.tamingDifficulty = 3f;
-                breedParams.headGraphics = new int[5] { 2134689, 2134689, 2134689, 0, 0 };
+                breedParams.headGraphics = new int[5] { 2134689, 2134689, 0, 0, 0 };
                 breedParams.headSize = 1.3f;
                 breedParams.headShieldAngle = 100f;
                 breedParams.neckStiffness = 0.2f;
+                breedParams.jawOpenAngle = 150f; //
+                breedParams.jawOpenLowerJawFac = .7666667f;
+                breedParams.jawOpenMoveJawsApart = 50f;
 
                 temp.canSwim = false;
                 temp.dangerousToPlayer = breedParams.danger;
