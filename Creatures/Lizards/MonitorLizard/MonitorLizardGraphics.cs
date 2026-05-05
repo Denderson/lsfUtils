@@ -9,7 +9,6 @@ public class MonitorLizardGraphics : LizardGraphics
     public MonitorLizardGraphics(MonitorLizard ow) : base(ow)
     {
         overrideHeadGraphic = 2134688;
-
         var state = Random.state;
         Random.InitState(ow.abstractPhysicalObject.ID.RandomSeed);
         var spriteIndex = startOfExtraSprites + extraSprites;

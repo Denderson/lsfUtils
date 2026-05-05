@@ -19,29 +19,17 @@ public class StarNosedLizardGraphics : LizardGraphics
 
         // activates the RNG that depends on lizard ID, making a lizard with some ID always get the same result
         if (UnityEngine.Random.value < 0.16f)
-        {
             overrideHeadGraphic = 2134689;
-        }
         else if (UnityEngine.Random.value < 0.33f)
-        {
             overrideHeadGraphic = 2134690;
-        }
         else if (UnityEngine.Random.value < 0.5f)
-        {
             overrideHeadGraphic = 2134691;
-        }
         else if (UnityEngine.Random.value < 0.66f)
-        {
             overrideHeadGraphic = 2134692;
-        }
         else if (UnityEngine.Random.value < 0.83f)
-        {
             overrideHeadGraphic = 2134693;
-        }
         else
-        {
             overrideHeadGraphic = 2134694;
-        }
 
         var spriteIndex = startOfExtraSprites + extraSprites;
         spriteIndex = AddCosmetic(spriteIndex, new SpineSpikes(this, spriteIndex));

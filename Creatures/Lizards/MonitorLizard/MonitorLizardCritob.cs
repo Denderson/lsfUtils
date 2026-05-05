@@ -20,13 +20,9 @@ public class MonitorLizardCritob : Critob
     public override int ExpeditionScore() => 10;
 
     public override Color DevtoolsMapColor(AbstractCreature acrit) => new Color(0.89f, 0.98f, 0.37f);
-
     public override string DevtoolsMapName(AbstractCreature acrit) => "MLz";
-
     public override IEnumerable<string> WorldFileAliases() => ["monitorlizard", "monitor lizard"];
-
     public override IEnumerable<RoomAttractivenessPanel.Category> DevtoolsRoomAttraction() => [RoomAttractivenessPanel.Category.Lizards];
-
     public override CreatureTemplate CreateTemplate() => LizardBreeds.BreedTemplate(Type, StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.LizardTemplate), StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.PinkLizard), StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.BlueLizard), StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.GreenLizard));
 
     public override void EstablishRelationships()
