@@ -40,11 +40,11 @@ namespace lsfUtils.Ripplespace
             Log.LogMessage("Ripplifying abstract!");
             abstractPhysicalObject.rippleLayer = rippleLayer;
             abstractPhysicalObject.rippleBothSides = rippleBoth;
-            if (abstractPhysicalObject is AbstractCreature)
+            if (abstractPhysicalObject as AbstractCreature apo)
             {
-                (abstractPhysicalObject as AbstractCreature).rippleLayer = 1;
-                (abstractPhysicalObject as AbstractCreature).rippleBothSides = true;
-                (abstractPhysicalObject as AbstractCreature).rippleCreature = true;
+                apo.rippleLayer = 1;
+                apo.rippleBothSides = true;
+                apo.rippleCreature = true;
             }
             if (CWTs.AbstractPhysicalObjectCWT.TryGetData(abstractPhysicalObject, out var data))
             {
