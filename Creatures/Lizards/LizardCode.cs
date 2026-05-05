@@ -455,7 +455,7 @@ namespace lsfUtils.Creatures.Lizards
                 temp.name = "MonitorLizard";
                 breedParams.template = type;
 
-                var temp2 = orig(WatcherEnums.CreatureTemplateType.PeachLizard, lizardAncestor, pinkTemplate, blueTemplate, greenTemplate);
+                var temp2 = orig(WatcherEnums.CreatureTemplateType.IndigoLizard, lizardAncestor, pinkTemplate, blueTemplate, greenTemplate);
                 temp.pathingPreferencesTiles = temp2.pathingPreferencesTiles;
                 temp.pathingPreferencesConnections = temp2.pathingPreferencesConnections;
                 temp.maxAccessibleTerrain = temp2.maxAccessibleTerrain;
@@ -495,11 +495,13 @@ namespace lsfUtils.Creatures.Lizards
                 breedParams.danger = 0.5f;
                 breedParams.headSize = 1.2f;
                 breedParams.tamingDifficulty = 3f;
-                breedParams.headGraphics = new int[5] { 2134688, 2134688, 2, 2, 3 };
+                breedParams.headGraphics = new int[5] { 2134688, 2134688, 2134689, 2, 3 };
                 breedParams.headShieldAngle = 100f;
                 breedParams.neckStiffness = 0.2f;
+                breedParams.jawOpenAngle = 150f; //
+                breedParams.jawOpenLowerJawFac = .7666667f;
+                breedParams.jawOpenMoveJawsApart = 50f;
 
-                breedParams.jawOpenLowerJawFac = 0.5f;
                 temp.waterRelationship = CreatureTemplate.WaterRelationship.Amphibious;
                 temp.canSwim = true;
                 temp.waterPathingResistance = 1f;
