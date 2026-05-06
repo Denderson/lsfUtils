@@ -24,9 +24,7 @@ public class StarNosedLizard : Lizard
         {
             smellRemaining--;
             if (smellRemaining == 0)
-            {
                 smellPoint = Vector2.zero;
-            }
         }
     }
 }
