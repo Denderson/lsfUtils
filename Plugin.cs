@@ -51,13 +51,13 @@ namespace lsfUtils
 {
     [BepInDependency("slime-cubed.slugbase")]
     [BepInDependency("io.github.dual.fisobs")]
-    [BepInPlugin("lsfUtils", "LSF Utils", "0.1")]
+    [BepInPlugin("lsfUtils", "LSF Utils", "0.1.0")]
 
     public class Plugin : BaseUnityPlugin
     {
         public static ManualLogSource Log { get; private set; }
 
-        public static readonly int StaticRandom = RXRandom.Int(100);
+        public static int StaticRandom;
 
         public bool initialized;
         public bool isInit;
@@ -77,9 +77,12 @@ namespace lsfUtils
         public void OnEnable()
         {
             Debug.Log("Starting LSF Utils");
+            Log.LogMessage("Starting lsfUtils 2");
             try
             {
                 Log = Logger;
+
+                StaticRandom = UnityEngine.Random.Range(0, 101);
 
                 On.RainWorld.OnModsInit += RainWorld_OnModsInit;
 
@@ -214,17 +217,21 @@ namespace lsfUtils
                 {
                     // ripple flower
                     {
+                        Log.LogMessage("Loading ripple flower code!");
                         On.Player.Update += RippleFlower.Player_Update;
                         On.KarmaFlower.BitByPlayer += RippleFlower.KarmaFlower_BitByPlayer;
                         On.KarmaFlower.DrawSprites += RippleFlower.KarmaFlower_DrawSprites;
                         On.KarmaFlower.ApplyPalette += RippleFlower.KarmaFlower_ApplyPalette;
                         On.KarmaFlower.InitiateSprites += RippleFlower.KarmaFlower_InitiateSprites;
                         On.PlayerGraphics.InitiateSprites += RippleFlower.PlayerGraphics_InitiateSprites;
+                        IL.RoomCamera.RefreshRippleMask += RippleFlower.RoomCamera_RefreshRippleMask;
+
 
                         On.PhysicalObject.GetLocalGravity += PhysicalObject_GetLocalGravity;
 
                         new Hook(typeof(Player).GetProperty(nameof(Player.rippleLevel)).GetGetMethod(), typeof(RippleFlower).GetMethod(nameof(RippleFlower.PlayerRippleLevel)));
                         new Hook(typeof(Player).GetProperty(nameof(Player.maxRippleLevel)).GetGetMethod(), typeof(RippleFlower).GetMethod(nameof(RippleFlower.PlayerMaxRippleLevel)));
+                        Log.LogMessage("Exiting ripple flower code!");
                     }
                 }
 
@@ -256,7 +263,6 @@ namespace lsfUtils
                 }
 
                 On.RoomSettings.LoadPlacedObjects_StringArray_Timeline += ConditionalLogic.RoomSettings_LoadPlacedObjects_StringArray_Timeline;
-                On.Player.GrabUpdate += Player_GrabUpdate;
 
 
                 if (isInit) return;
@@ -284,10 +290,6 @@ namespace lsfUtils
                 Logger.LogError(e);
             }
         }
-
-        
-
-
 
         private void RainWorld_OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
         {

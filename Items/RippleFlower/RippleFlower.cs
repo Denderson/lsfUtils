@@ -55,6 +55,7 @@ namespace lsfUtils.Items.RippleFlower
             if (!CWTs.KarmaFlowerCWT.TryGetData(flower, out var data))
             {
                 Log.LogMessage("Cannot get flower CWT!");
+                return false;
             }
             return data.rippleFlower;
         }
@@ -73,12 +74,13 @@ namespace lsfUtils.Items.RippleFlower
                 if (grasp.grabber is Player player)
                 {
                     player.ObjectEaten(self);
-                    
+
                     if (player.SlugCatClass != WatcherEnums.SlugcatStatsName.Watcher && CWTs.PlayerCWT.TryGetData(player, out var data))
                     {
                         data.rippleMode = true;
                         data.startingRipple = true;
                         data.rippleTimer = rippleSpaceDuration;
+                        Log.LogMessage("Ripple flower eaten, starting ripple sequence");
                     }
                     else
                     {
@@ -90,6 +92,7 @@ namespace lsfUtils.Items.RippleFlower
             }
             else orig(self, grasp, eu);
         }
+
         public static void KarmaFlower_DrawSprites(On.KarmaFlower.orig_DrawSprites orig, KarmaFlower self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
             orig(self, sLeaser, rCam, timeStacker, camPos);
@@ -98,6 +101,7 @@ namespace lsfUtils.Items.RippleFlower
                 sLeaser.sprites[self.EffectSprite(0)].color = Color.Lerp(RainWorld.RippleColor, Color.white, 0.3f);
             }
         }
+
         public static void KarmaFlower_InitiateSprites(On.KarmaFlower.orig_InitiateSprites orig, KarmaFlower self, RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
             orig(self, sLeaser, rCam);
@@ -109,7 +113,7 @@ namespace lsfUtils.Items.RippleFlower
                 {
                     sLeaser.sprites[self.PetalSprite(i)].shader = RainWorld.TryGetRippleMaskedShaderVariant(self.abstractPhysicalObject.rippleLayer, "RippleBasic");
                 }
-                sLeaser.sprites[self.EffectSprite(2)].shader = RainWorld.TryGetRippleMaskedShaderVariant(self.abstractPhysicalObject.rippleLayer, "RippleGlow");;
+                sLeaser.sprites[self.EffectSprite(2)].shader = RainWorld.TryGetRippleMaskedShaderVariant(self.abstractPhysicalObject.rippleLayer, "RippleGlow");
             }
         }
 
@@ -124,6 +128,76 @@ namespace lsfUtils.Items.RippleFlower
             orig(self, sLeaser, rCam, palette);
         }
 
+        private static void ExitRippleSpace(Player self, PlayerCWT.DataClass data)
+        {
+            Log.LogMessage("ExitRippleSpace called. isCamo: " + self.isCamo + " rippleLayer: " + self.abstractCreature.rippleLayer + " lastRippleState: " + (self.room?.game?.cameras?[0]?.lastRippleState.ToString() ?? "null"));
+
+            self.Stun(12);
+            data.startingRipple = false;
+            data.activationTimer = 0;
+            self.performingActivationTimer = 0;
+            self.rippleActivating = false;
+            self.startingCamoStateOnActivate = -1;
+
+            if (self.isCamo)
+            {
+                Log.LogMessage("ExitRippleSpace calling ToggleCamo. rippleLevel: " + self.rippleLevel);
+                self.ToggleCamo();
+                Log.LogMessage("ExitRippleSpace after ToggleCamo. isCamo: " + self.isCamo + " lastRippleState: " + (self.room?.game?.cameras?[0]?.lastRippleState.ToString() ?? "null"));
+            }
+            else
+            {
+                Log.LogMessage("ExitRippleSpace skipping ToggleCamo, isCamo was already false");
+            }
+
+            data.rippleMode = false;
+            self.abstractCreature.rippleLayer = 0;
+
+            if (self.rippleData != null)
+            {
+                Log.LogMessage("ExitRippleSpace rippleData state. gameplayRippleActive: " + self.rippleData.gameplayRippleActive + " gameplayRippleAnimation: " + self.rippleData.gameplayRippleAnimation);
+                self.rippleData.gameplayRippleActive = false;
+                self.rippleData.gameplayRippleAnimation = 0f;
+            }
+            else
+            {
+                Log.LogMessage("ExitRippleSpace rippleData is null");
+            }
+
+            if (self.transitionRipple != null)
+            {
+                self.transitionRipple.Destroy();
+                self.transitionRipple = null;
+            }
+
+            Log.LogMessage("ExitRippleSpace complete. rippleLayer: " + self.abstractCreature.rippleLayer + " lastRippleState: " + (self.room?.game?.cameras?[0]?.lastRippleState.ToString() ?? "null") + " gameplayRippleActive: " + (self.rippleData?.gameplayRippleActive.ToString() ?? "null"));
+        }
+
+        public static void RoomCamera_RefreshRippleMask(ILContext il)
+        {
+            ILCursor c = new ILCursor(il);
+            int matches = 0;
+            while (c.TryGotoNext(MoveType.After,
+                i => i.MatchLdfld<RippleCameraData>("gameplayRippleActive")))
+            {
+                matches++;
+                if (matches == 2)
+                {
+                    c.Emit(OpCodes.Ldarg_0);
+                    c.EmitDelegate<Func<bool, RoomCamera, bool>>((gameplayActive, cam) =>
+                    {
+                        Log.LogMessage("RefreshRippleMask IL check. gameplayActive: " + gameplayActive + " lastRippleState: " + cam.lastRippleState + " result: " + (gameplayActive && cam.lastRippleState));
+                        return gameplayActive && cam.lastRippleState;
+                    });
+                    break;
+                }
+            }
+            if (matches < 2)
+            {
+                Log.LogMessage("RefreshRippleMask IL hook FAILED to find second gameplayRippleActive read! matches found: " + matches);
+            }
+        }
+
         public static void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
         {
             orig(self, eu);
@@ -135,17 +209,17 @@ namespace lsfUtils.Items.RippleFlower
             {
                 return;
             }
-            if (data.rippleTimer > 1 && self.standingInWarpPointProtectionTime < 10)
+            if (data.rippleTimer > 0 && self.standingInWarpPointProtectionTime < 10)
             {
                 self.watcherInstability = (float)(data.rippleTimer) / (float)rippleSpaceDuration;
                 self.watcherInstability /= 2;
                 self.WatcherInstabilityUpdate();
                 data.rippleTimer--;
-                if (data.rippleTimer == 1)
+                if (data.rippleTimer == 0)
                 {
-                    self.Stun(12);
-                    data.rippleMode = false;
-                    self.abstractCreature.rippleLayer = 0;
+                    Log.LogMessage("Ripple timer reached 0, calling ExitRippleSpace");
+                    ExitRippleSpace(self, data);
+                    return;
                 }
             }
             if (data.startingRipple)
@@ -171,7 +245,7 @@ namespace lsfUtils.Items.RippleFlower
                 }
                 if (data.activationTimer == 80 && self.performingActivationTimer == 0)
                 {
-                    Log.LogMessage("Setting ripple layer!");
+                    Log.LogMessage("Setting ripple layer! rippleLevel: " + self.rippleLevel);
                     self.ChangeRippleLayer(1);
                     if (self.rippleData != null)
                     {
@@ -180,6 +254,7 @@ namespace lsfUtils.Items.RippleFlower
                     }
                     data.startingRipple = false;
                     self.ToggleCamo();
+                    Log.LogMessage("After entry ToggleCamo. isCamo: " + self.isCamo + " lastRippleState: " + (self.room?.game?.cameras?[0]?.lastRippleState.ToString() ?? "null"));
                 }
                 if (self.performingActivationTimer > 0)
                 {
@@ -205,17 +280,20 @@ namespace lsfUtils.Items.RippleFlower
                 self.rippleActivating = false;
                 self.startingCamoStateOnActivate = -1;
             }
-            if (self.room.game.cameras != null) //&& self.room.game.cameras[0].rippleData != null)
+            if (data.rippleMode)
             {
-                self.CamoUpdate();
-            }
-            if (self.transitionRipple != null)
-            {
-                self.TransitionRippleUpdate();
-            }
-            if (self.warpSpawningRipple != null)
-            {
-                self.WarpSpawningUpdate();
+                if (self.room.game.cameras != null)
+                {
+                    self.CamoUpdate();
+                }
+                if (self.transitionRipple != null)
+                {
+                    self.TransitionRippleUpdate();
+                }
+                if (self.warpSpawningRipple != null)
+                {
+                    self.WarpSpawningUpdate();
+                }
             }
         }
 

@@ -46,11 +46,7 @@ public class FlameLizard : Lizard
         {
             return; 
         }
-        if (bodyChunks[0].submersion > 0)
-        {
-            JawOpen = 0f;
-        }
-        if (Consious && jawOpen > 0.25)
+        if (Consious && jawOpen > 0.3)
         {
             flameTimer = math.min(flameTimer + 1, 40);
         }
@@ -80,11 +76,11 @@ public class FlameLizard : Lizard
             flameJet.target = Custom.DirVec(bodyChunks[1].pos, bodyChunks[0].pos) * 170;
             if (flameTimer > 20)
             {
-                flameJet.intensity = Mathf.Min(flameJet.intensity + 0.04f, jawOpen);
+                flameJet.intensity = Mathf.Min(flameJet.intensity + 0.06f, jawOpen);
             }
             else
             {
-                flameJet.intensity = Mathf.Max(flameJet.intensity - 0.04f, 0);
+                flameJet.intensity = Mathf.Max(flameJet.intensity - 0.06f, 0);
                 if (flameJet.intensity <= 0.1)
                 {
                     flameJet.room.RemoveObject(flameJet);
